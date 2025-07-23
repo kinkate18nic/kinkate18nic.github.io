@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RailHygiene - Crowdsourced Hygiene Ratings for Indian Railways Coaches</title>
+
+  <!-- Paths are correct -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
   <link rel="manifest" href="assets/site.webmanifest">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RailHygiene - Crowdsourced Hygiene Ratings for Indian Railways Coaches</title>
+
+  <!-- STYLES UPDATED FOR NEW PHONE MOCKUP -->
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -59,51 +63,59 @@
       max-width: 650px;
     }
 
-    /* New style for the Google Play badge */
     .play-store-button {
       display: inline-block;
-      margin: 30px 0; /* Keeps the spacing from the old button */
-      transition: transform 0.2s ease-out; /* Adds a subtle hover effect */
+      margin: 30px 0;
+      transition: transform 0.2s ease-out;
     }
 
     .play-store-button:hover {
-      transform: scale(1.05); /* Slightly enlarges the button on hover */
+      transform: scale(1.05);
     }
 
     .play-store-button img {
-      height: 60px; /* Adjust height as needed */
-      width: auto; /* Let the width adjust automatically to maintain aspect ratio */
-      vertical-align: middle; /* Helps prevent extra space below the image */
+      height: 60px;
+      width: auto;
+      vertical-align: middle;
     }
-
+    
+    /* MODIFIED: Phone mockup section now stacks content vertically */
     .phone-mockup {
       flex: 1;
       min-width: 300px;
       display: flex;
+      flex-direction: column; 
       justify-content: center;
       align-items: center;
       padding: 20px;
     }
-
-    .phone-frame {
-      width: 280px;
-      height: 580px;
-      background-color: #000;
-      border-radius: 40px;
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
+    
+    /* NEW: Container for the phone frame image and carousel */
+    .phone-container {
       position: relative;
+      width: 300px; 
     }
 
-    .carousel-track-wrapper {
+    .phone-frame-image {
       width: 100%;
-      height: 100%;
-      overflow: hidden;
-      position: relative;
-      border-radius: 20px;
+      height: auto;
+      user-select: none;
     }
-
+    
+    /* MODIFIED: Carousel is now positioned ON TOP of the phone frame image */
+    .carousel-track-wrapper {
+      position: absolute;
+      /* =================================================================== */
+      /* === IMPORTANT: ADJUST THESE 4 VALUES TO FIT YOUR PHONE PNG      === */
+      top: 4px;       
+      left: 9px;      
+      width: 288px;   
+      height: 635px;  
+      /* =================================================================== */
+      overflow: hidden;
+      border-radius: 30px; 
+    }
+    
     .carousel-track {
       display: flex;
       height: 100%;
@@ -113,9 +125,41 @@
     .carousel-track img {
       flex: 0 0 100%;
       height: 100%;
-      object-fit: contain;
-      border-radius: 20px;
+      object-fit: cover; /* Changed to 'cover' to fill the screen area */
     }
+    
+    /* NEW: Styles for the synchronized text below the phone */
+    #slide-description {
+      text-align: center;
+      margin-top: 25px;
+      max-width: 300px;
+      min-height: 170px; /* Ensures stable height even for 2-line title + 3-line text */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    
+    #slide-description.fade-out {
+        opacity: 0;
+    }
+
+    #slide-title {
+      font-size: 1.4em;
+      color: #333;
+      margin: 0 0 5px 0;
+    }
+
+    #slide-text {
+      font-size: 1em;
+      color: #666;
+      line-height: 1.5;
+      text-align: center;
+    }
+
 
     .footer {
       text-align: center;
@@ -150,8 +194,13 @@
       </a>
     </div>
 
+    <!-- HTML UPDATED FOR THE NEW PHONE MOCKUP -->
     <div class="phone-mockup">
-      <div class="phone-frame">
+      <div class="phone-container">
+        <!-- The actual phone frame image from your assets folder -->
+        <img src="assets/phone-frame.png" alt="Phone Frame" class="phone-frame-image">
+        
+        <!-- The carousel that will be displayed inside the frame -->
         <div class="carousel-track-wrapper">
           <div class="carousel-track" id="carouselTrack">
             <img src="screenshots/screenshot1.png" alt="Screenshot 1" />
@@ -165,6 +214,12 @@
           </div>
         </div>
       </div>
+
+      <!-- NEW HTML for the synchronized description below the phone -->
+      <div id="slide-description">
+        <h3 id="slide-title"></h3>
+        <p id="slide-text"></p>
+      </div>
     </div>
   </div>
 
@@ -173,15 +228,53 @@
     <p>© 2025 RailHygiene</p>
   </footer>
 
+  <!-- JAVASCRIPT UPDATED TO HANDLE TEXT SYNCHRONIZATION -->
   <script>
     const track = document.getElementById('carouselTrack');
     const slides = track.querySelectorAll('img');
-    let index = 0;
+    
+    const descriptionContainer = document.getElementById('slide-description');
+    const slideTitle = document.getElementById('slide-title');
+    const slideText = document.getElementById('slide-text');
+    
+    // An array of objects containing the title and text for each slide.
+    // Make sure the order matches the order of your screenshot images.
+    const slideDescriptions = [
+      { title: "Search a PNR or Train", text: "Quickly search for any train or PNR ." },
+      { title: "Fetch your PNR", text: "Fetch your journey details on Journey Card." },
+      { title: "Check Past Feedbacks", text: "View overall ratings for your coach from fellow passengers before you board." },
+      { title: "Filter Trains", text: "Using Train Number or Name" },
+      { title: "Search a Train", text: "Look up any train and instantly see a complete breakdown of hygiene scores for all its coaches."},
+      { title: "View Complete Train Hygiene Ratings", text: "Coach wise detailed ratings for all available coaches" },
+      { title: "Give Feedback", text: "Quickly and anonymously review the cleanliness of the coach you traveled in." },
+      { title: "Help the Community", text: "Each feedback contributes to a transparent, community driven database of coach hygiene across IR." }
+    ];
 
-    setInterval(() => {
-      index = (index + 1) % slides.length;
+    let index = 0;
+    
+    // Function to update the text and image position
+    function updateContent() {
+      slideTitle.textContent = slideDescriptions[index].title;
+      slideText.textContent = slideDescriptions[index].text;
       track.style.transform = `translateX(-${index * 100}%)`;
-    }, 3000);
+    }
+    
+    // Function to cycle through slides with a fade effect for the text
+    function cycleContent() {
+      descriptionContainer.classList.add('fade-out');
+      
+      setTimeout(() => {
+          index = (index + 1) % slides.length;
+          updateContent();
+          descriptionContainer.classList.remove('fade-out');
+      }, 400); // This delay must match the CSS transition duration for opacity
+    }
+
+    // Set the initial text and image on page load
+    updateContent();
+
+    // Start the automatic slideshow
+    setInterval(cycleContent, 3000);
   </script>
 </body>
 </html>
