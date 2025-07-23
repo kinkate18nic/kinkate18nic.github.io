@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RailHygiene - Crowdsourced Hygiene Ratings for Indian Railways</title>
+  <title>RailHygiene - Crowdsourced Hygiene Ratings for Indian Railways Coaches</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -93,28 +93,29 @@
       position: relative;
     }
 
-    .carousel {
+    .carousel-track-wrapper {
       width: 100%;
       height: 100%;
+      overflow: hidden;
       position: relative;
+      border-radius: 20px;
     }
 
-    .carousel img {
+    .carousel-track {
+      display: flex;
+      height: 100%;
+      width: 800%; /* 8 screenshots */
+      transition: transform 0.8s ease-in-out;
+    }
+
+    .carousel-track img {
       width: 100%;
       height: 100%;
-      border-radius: 20px;
       object-fit: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
-      transition: opacity 1s ease;
+      flex-shrink: 0;
+      border-radius: 20px;
     }
 
-    .carousel img.active {
-      opacity: 1;
-      z-index: 1;
-    }
 
     .footer {
       text-align: center;
@@ -151,8 +152,9 @@
 
     <div class="phone-mockup">
       <div class="phone-frame">
-        <div class="carousel">
-          <img src="screenshot1.png" class="active" alt="Screenshot 1"/>
+        <div class="carousel-track-wrapper">
+          <div class="carousel-track" id="carouselTrack">
+          <img src="screenshot1.png" alt="Screenshot 1" />
           <img src="screenshot2.png" alt="Screenshot 2"/>
           <img src="screenshot3.png" alt="Screenshot 3"/>
           <img src="screenshot4.png" alt="Screenshot 4"/>
@@ -171,14 +173,14 @@
   </footer>
 
   <script>
-    const screenshots = document.querySelectorAll('.carousel img');
-    let currentIndex = 0;
+  const track = document.getElementById('carouselTrack');
+  const slides = track.querySelectorAll('img');
+  let index = 0;
 
-    setInterval(() => {
-      screenshots[currentIndex].classList.remove('active');
-      currentIndex = (currentIndex + 1) % screenshots.length;
-      screenshots[currentIndex].classList.add('active');
-    }, 3000);
-  </script>
+  setInterval(() => {
+    index = (index + 1) % slides.length;
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }, 3000);
+</script>
 </body>
 </html>
