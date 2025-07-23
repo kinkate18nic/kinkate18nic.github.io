@@ -133,9 +133,15 @@
       text-align: center;
       margin-top: 25px;
       max-width: 300px;
+      min-height: 170px; /* Ensures stable height even for 2-line title + 3-line text */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
       opacity: 1;
       transition: opacity 0.4s ease-in-out;
     }
+
     
     #slide-description.fade-out {
         opacity: 0;
@@ -151,8 +157,9 @@
       font-size: 1em;
       color: #666;
       line-height: 1.5;
-      min-height: 108px; 
+      text-align: center;
     }
+
 
     .footer {
       text-align: center;
