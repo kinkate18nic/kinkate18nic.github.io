@@ -156,33 +156,35 @@
       <div class="phone-frame">
         <div class="carousel-track-wrapper">
           <div class="carousel-track" id="carouselTrack">
-          <img src="screenshot1.png" alt="Screenshot 1" />
-          <img src="screenshot2.png" alt="Screenshot 2"/>
-          <img src="screenshot3.png" alt="Screenshot 3"/>
-          <img src="screenshot4.png" alt="Screenshot 4"/>
-          <img src="screenshot5.png" alt="Screenshot 5"/>
-          <img src="screenshot6.png" alt="Screenshot 6"/>
-          <img src="screenshot7.png" alt="Screenshot 7"/>
-          <img src="screenshot8.png" alt="Screenshot 8"/>
+            <img src="screenshot1.png" alt="Screenshot 1" />
+            <img src="screenshot2.png" alt="Screenshot 2"/>
+            <img src="screenshot3.png" alt="Screenshot 3"/>
+            <img src="screenshot4.png" alt="Screenshot 4"/>
+            <img src="screenshot5.png" alt="Screenshot 5"/>
+            <img src="screenshot6.png" alt="Screenshot 6"/>
+            <img src="screenshot7.png" alt="Screenshot 7"/>
+            <img src="screenshot8.png" alt="Screenshot 8"/>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </div> <!-- The container div now closes here -->
 
+  <!-- The footer is now outside the container -->
   <footer class="footer">
     <a href="./privacy.html">Privacy Policy</a> | <a href="./terms.html">Terms of Use</a>
     <p>© 2025 RailHygiene</p>
   </footer>
 
   <script>
-  const track = document.getElementById('carouselTrack');
-  const slides = track.querySelectorAll('img');
-  let index = 0;
+    const track = document.getElementById('carouselTrack');
+    const slides = track.querySelectorAll('img');
+    let index = 0;
 
-  setInterval(() => {
-    index = (index + 1) % slides.length;
-    track.style.transform = `translateX(-${index * 100}%)`;
-  }, 3000);
-</script>
+    setInterval(() => {
+      index = (index + 1) % slides.length;
+      track.style.transform = `translateX(-${index * 100}%)`;
+    }, 3000);
+  </script>
 </body>
 </html>
